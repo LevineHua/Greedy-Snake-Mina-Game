@@ -4,4 +4,5 @@
 
 ### 预览图
 
-![预览图](D:\study\minaGame\IMG\预览图.gif)
+![预览图](IMG/预览图.gif))
+
