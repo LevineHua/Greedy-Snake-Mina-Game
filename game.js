@@ -52,6 +52,8 @@ let points = 0
 let stage = 5
 // 每次加速的速度
 let accelerateSpeed = 25
+// 操作按钮宽高
+let btnWidth = 70
 
 // 绘制一个矩形
 const context = canvas.getContext('2d')
@@ -60,7 +62,7 @@ const context = canvas.getContext('2d')
 initHeight()
 function initHeight() {
   // 控制台初始高度
-  let consoleHeight = 200
+  let consoleHeight = btnWidth * 3 + 20
   // 剩余的高度
   let otherHeight = windowHeight - consoleHeight
   // 控制台初始高度加上剩余高度和蛇的尺寸的余数
@@ -128,7 +130,7 @@ function drawSnack() {
   // 绘制得分
   context.fillStyle = '#fff'
   context.font = 'normal 30px sans-serif'
-  context.setTextAlign = 'center'
+  context.textAlign = 'center'
   context.fillText(points, windowWidth / 2, 50)
 
 }
@@ -330,7 +332,7 @@ function pancel() {
   // 绘制按钮
   context.fillStyle = '#1aad19'
   // 按钮宽度
-  let btnWidth = 60
+  // let btnWidth = 70
   // 上下按钮x轴坐标
   let axisX = windowWidth / 2 - (btnWidth / 2)
   // y轴坐标
