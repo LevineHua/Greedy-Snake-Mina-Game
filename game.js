@@ -49,7 +49,7 @@ let meatY = ''
 // 总得分
 let points = 0
 // 每得 10 分加一次速
-let stage = 10
+let stage = 5
 // 每次加速的速度
 let accelerateSpeed = 25
 
@@ -69,10 +69,10 @@ function initHeight() {
   regionHeight = windowHeight - consoleHeight
 }
 
-// 初始化蛇
+// 初始化游戏
 initSnake()
 // 初始化操作区
-pancel()
+// pancel()
 // 初始化
 function initSnake() {
   // 蛇的颜色
@@ -80,17 +80,27 @@ function initSnake() {
   // 清空元素
   context.clearRect(0, 0, windowWidth, regionHeight)
   // 绘制初始位置
-  drawSnack()
+  // drawSnack()
+  // 开始按钮
+  createBeginBtn()
   // 开始游走
-  wx.showModal({
-    title: '',
-    content: '是否开始游戏？',
-    success(res) {
-      if(res.confirm) {
-        wandering()
-      }
-    }
-  })
+  // wx.showModal({
+  //   title: '',
+  //   content: '是否开始游戏？',
+  //   success(res) {
+  //     if(res.confirm) {
+  //       wandering()
+  //     }
+  //     if(res.cancel) {
+  //       // 初始化蛇
+  //       drawSnack()
+  //       // 初始化操作区
+  //       pancel()
+  //       // 开始按钮
+  //       createBeginBtn()
+  //     }
+  //   }
+  // })
 }
 
 // 绘制蛇
@@ -363,7 +373,7 @@ function pancel() {
 function clickEvent(type) {
   // console.log(type);
   // 如果点击方向和行进方向相同或和行进方向相反，则不执行操作
-  if(direction === type || !isRunChange) return
+  if(direction === type || !isRunChange || !snakeTimer) return
   if(type === 'left' && direction === 'right') return
   if(type === 'right' && direction === 'left') return
   if(type === 'up' && direction === 'down') return
@@ -381,6 +391,32 @@ function clickEvent(type) {
   isRunChange = false
 }
 
+// 开始按钮
+function createBeginBtn() {
+  var image = wx.createImage()
+  var imgX = windowWidth / 2 - 81
+  var imgY = regionHeight / 2 - 33
+  image.src = 'IMG/begin-btn.png'
+  image.onload = function () {
+    context.drawImage(image, imgX, imgY)
+  }
+
+  // 监听点击事件
+  wx.onTouchStart((res) => {
+    // 如果游戏正在开始则禁用按钮
+    if(snakeTimer) return
+
+    // 点击区域的x坐标
+    let clickX = res.changedTouches[0].clientX
+    // 点击区域的y坐标
+    let clickY = res.changedTouches[0].clientY
+    // 单击按钮
+    if(clickX > imgX && clickX < imgX + 163 && clickY > imgY && clickY < imgY + 67) {
+      wandering()
+    }
+  })
+}
+
 // 游戏结束
 function gameOver(title) {
   clearInterval(snakeTimer)
@@ -390,35 +426,53 @@ function gameOver(title) {
     content: title + '是否重新开始',
     success(res) {
       if(res.confirm) {
-        direction = 'down'
-        prevDirection = 'down'
-        isRunChange = true
-        snakeWidth = 25
-        snake = [
-          {
-            x: 0, // x轴
-            y: 0, // y轴
-            itemDirection: 'down',  // 行进方向
-          },
-          {
-            x: 0,
-            y: snakeWidth,
-            itemDirection: 'down'
-          },
-          {
-            x: 0,
-            y: snakeWidth * 2,
-            itemDirection: 'down'
-          }
-        ]
-        changeIndexs = []
-        speed = 200
-        snakeTimer = null
-        meatX = ''
-        meatY = ''
-        points = 0
-        wandering()
+        resetGame(true)
+      }
+      if(res.cancel) {
+        // 重置
+        resetGame()
+        // 初始化蛇
+        // drawSnack()
+        // 初始化操作区
+        // pancel()
+        // 开始按钮
+        createBeginBtn()
       }
     }
   })
+}
+
+// 重置参数
+function resetGame(begin) {
+  context.clearRect(0, 0, windowWidth, windowHeight)
+  direction = 'down'
+  prevDirection = 'down'
+  isRunChange = true
+  snakeWidth = 25
+  snake = [
+    {
+      x: 0, // x轴
+      y: 0, // y轴
+      itemDirection: 'down',  // 行进方向
+    },
+    {
+      x: 0,
+      y: snakeWidth,
+      itemDirection: 'down'
+    },
+    {
+      x: 0,
+      y: snakeWidth * 2,
+      itemDirection: 'down'
+    }
+  ]
+  changeIndexs = []
+  speed = 300
+  snakeTimer = null
+  meatX = ''
+  meatY = ''
+  points = 0
+  if(begin) {
+    wandering()
+  }
 }
