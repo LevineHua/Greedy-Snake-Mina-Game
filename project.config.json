@@ -20,24 +20,26 @@
     "compileHotReLoad": false,
     "useMultiFrameRuntime": true,
     "useApiHook": true,
-    "useApiHostProcess": true,
+    "useApiHostProcess": false,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
     },
     "enableEngineNative": false,
+    "bundle": false,
     "useIsolateContext": true,
     "useCompilerModule": true,
     "userConfirmedUseCompilerModuleSwitch": false,
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [],
-    "minifyWXSS": true
+    "minifyWXSS": true,
+    "useStaticServer": false
   },
   "compileType": "game",
   "libVersion": "1.9.94",
-  "appid": "wxeb93c2fbd88a68bd",
+  "appid": "wx48876bd69a388064",
   "projectname": "minigame-1",
   "condition": {
     "search": {

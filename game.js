@@ -34,7 +34,7 @@ let snake = [
 // let changeIndex = 0
 let changeIndexs = []
 // 移动速度：500毫秒
-let speed = 200
+let speed = 300
 // 位置
 // let snakeX = 0 //canvas.width / 2 - (snakeWidth / 2)
 // let snakeY = 0 //0
@@ -48,9 +48,26 @@ let meatX = ''
 let meatY = ''
 // 总得分
 let points = 0
+// 每得 10 分加一次速
+let stage = 10
+// 每次加速的速度
+let accelerateSpeed = 25
 
 // 绘制一个矩形
 const context = canvas.getContext('2d')
+
+// 计算活动区和控制台高度
+initHeight()
+function initHeight() {
+  // 控制台初始高度
+  let consoleHeight = 200
+  // 剩余的高度
+  let otherHeight = windowHeight - consoleHeight
+  // 控制台初始高度加上剩余高度和蛇的尺寸的余数
+  consoleHeight = consoleHeight + (otherHeight % snakeWidth)
+  // 得出活动区的高度
+  regionHeight = windowHeight - consoleHeight
+}
 
 // 初始化蛇
 initSnake()
@@ -82,6 +99,9 @@ function drawSnack() {
   // 创建肉
   createMeat()
 
+  // 因为 Android 需要进行每帧调用，所以每次绘制蛇时也需要重新绘制控制台
+  pancel()
+
   // 已数组的形式绘制蛇
   for(let i = 0; i < snake.length; i++) {
     const { x, y } = snake[i]
@@ -94,6 +114,12 @@ function drawSnack() {
     // context.fillStyle = '#fff'
     // context.fillText(i, x, y)
   }
+
+  // 绘制得分
+  context.fillStyle = '#fff'
+  context.font = 'normal 30px sans-serif'
+  context.setTextAlign = 'center'
+  context.fillText(points, windowWidth / 2, 50)
 
 }
 // 游走
@@ -108,10 +134,21 @@ function wandering() {
     // 如果重叠的坐标数组大于0，则说明吃上肉了
     if(eatMeat.length > 0) {
       // console.log('吃上了');
-      // 加分
+      /***************** 加分 *****************/
       points ++ 
-      // 重新创建肉
+
+      /***************** 加速 *****************/
+      if(points % stage === 0 && speed > 50) {
+        clearInterval(snakeTimer)
+        snakeTimer = null
+        speed = speed - accelerateSpeed
+        wandering()
+      }
+
+      /***************** 重新创建肉 *****************/
       createMeat(true)
+
+      /***************** 吃肉后添加一节蛇 *****************/
       // 最后一节蛇
       let lastSnakeItem = snake[snake.length - 1]
       // 最后一节蛇的行进方向
@@ -283,9 +320,9 @@ function pancel() {
   // 绘制按钮
   context.fillStyle = '#1aad19'
   // 按钮宽度
-  let btnWidth = 50
+  let btnWidth = 60
   // 上下按钮x轴坐标
-  let axisX = windowWidth / 2 - 25
+  let axisX = windowWidth / 2 - (btnWidth / 2)
   // y轴坐标
   let axisY = regionHeight + 10
   // 上
